@@ -1,7 +1,27 @@
 package main
 
-import "fmt"
+import (
+	"log"
+	"net/http"
+
+	"github.com/go-playground/validator"
+	"github.com/gorilla/mux"
+	"github.com/kalmastenitin/user_management/config"
+	"github.com/kalmastenitin/user_management/routes"
+)
 
 func main() {
-	fmt.Println("Hello")
+	config.Connect()
+	r := mux.NewRouter()
+	routes.Validate = validator.New()
+
+	r.HandleFunc("/permission", routes.GetAllPermissions).Methods("GET")
+	r.HandleFunc("/permission", routes.CreatePermission).Methods("POST")
+	r.HandleFunc("/permission", routes.DeletePermission).Methods("DELETE")
+	r.HandleFunc("/group", routes.GetAllGroups).Methods("GET")
+	r.HandleFunc("/group", routes.CreateGroup).Methods("POST")
+	r.HandleFunc("/group", routes.DeleteGroup).Methods("DELETE")
+	r.HandleFunc("/assignpermission", routes.AssignPermissions).Methods("POST")
+
+	log.Fatal(http.ListenAndServe(":8001", r))
 }
