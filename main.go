@@ -22,7 +22,6 @@ func main() {
 	r.HandleFunc("/group", routes.GetAllGroups).Methods("GET")
 	r.HandleFunc("/group", routes.CreateGroup).Methods("POST")
 	r.HandleFunc("/group", routes.DeleteGroup).Methods("DELETE")
-	r.HandleFunc("/assignpermission", routes.AssignPermissions).Methods("POST")
 	r.HandleFunc("/assignpermissionmany", routes.AssignPermissionsMany).Methods("POST")
 	r.HandleFunc("/getpermission", routes.GetPermission).Methods("GET")
 

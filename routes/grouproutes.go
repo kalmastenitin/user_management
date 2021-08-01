@@ -99,44 +99,6 @@ func DeleteGroup(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(deleteresult)
 }
 
-func AssignPermissions(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	var group models.Group
-	var permission models.Permission
-	var m map[string]string
-
-	_ = json.NewDecoder(r.Body).Decode(&m)
-	log.Println(m["PermissionID"])
-	err := models.Groupcollection.FindOne(context.TODO(), bson.M{"name": m["GroupID"]}).Decode(&group)
-	if err != nil {
-		log.Printf("error while getting group, Reason: %v\n", err)
-		helpers.GetError(err, w, http.StatusInternalServerError)
-		return
-	}
-
-	err = models.Permissioncollection.FindOne(context.TODO(), bson.M{"codename": m["PermissionID"]}).Decode(&permission)
-	if err != nil {
-		log.Printf("error while getting permission, Reason: %v\n", err)
-		helpers.GetError(err, w, http.StatusInternalServerError)
-		return
-	}
-	// json.Unmarshal(r.Body, m)
-
-	newGroupPermissions := models.GroupPermissions{
-		GroupID:     &group,
-		PermissonID: &permission,
-	}
-
-	result, err := models.Grouppermissioncollection.InsertOne(context.TODO(), newGroupPermissions)
-	if err != nil {
-		helpers.GetError(err, w, http.StatusInternalServerError)
-		return
-	}
-
-	json.NewEncoder(w).Encode(result)
-
-}
-
 type ManyPermission struct {
 	GroupID      string
 	PermissionID []string
@@ -146,12 +108,13 @@ func AssignPermissionsMany(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	var group models.Group
-	var permission models.Permission
+
 	var permissionObjects []interface{}
 	var permissions ManyPermission
 
 	json.NewDecoder(r.Body).Decode(&permissions)
 
+	// finding permission group object name
 	err := models.Groupcollection.FindOne(context.TODO(), bson.M{"name": permissions.GroupID}).Decode(&group)
 	if err != nil {
 		log.Printf("error while getting group, Reason: %v\n", err)
@@ -159,8 +122,10 @@ func AssignPermissionsMany(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// making list of permission objcts
 	for _, value := range permissions.PermissionID {
 		log.Println(value)
+		var permission models.Permission
 		err := models.Permissioncollection.FindOne(context.TODO(), bson.M{"codename": value}).Decode(&permission)
 		if err != nil {
 			log.Printf("error while getting permission, Reason: %v\n", err)
@@ -182,8 +147,8 @@ func AssignPermissionsMany(w http.ResponseWriter, r *http.Request) {
 		} else {
 			log.Println("error")
 		}
-
 	}
+
 	log.Println(permissionObjects...)
 	if len(permissionObjects) != 0 {
 		result, err := models.Grouppermissioncollection.InsertMany(context.TODO(), permissionObjects)
@@ -191,23 +156,43 @@ func AssignPermissionsMany(w http.ResponseWriter, r *http.Request) {
 			helpers.GetError(err, w, http.StatusInternalServerError)
 			return
 		}
-
+		w.WriteHeader(http.StatusAccepted)
 		json.NewEncoder(w).Encode(result)
 		return
 	}
 	helpers.ReturnSuccess("Success", w, http.StatusAccepted)
-	return
+}
+
+type AllGroupPermission struct {
+	group             models.Group
+	group_permissions []interface{}
 }
 
 func GetPermission(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
+	var allGroupsPermission []interface{}
+	groupname := r.URL.Query().Get("name")
 
-	var group_permission models.GroupPermissions
-
-	err := models.Grouppermissioncollection.FindOne(context.TODO(), bson.M{"group.name": "Superadmin", "permission.codename": "view_permission"}).Decode(&group_permission)
+	cursor, err := models.Grouppermissioncollection.Find(context.TODO(), bson.M{"group.name": groupname})
 	if err != nil {
 		helpers.GetErrorCustom("Permission Not Found", w, http.StatusNotFound)
 		return
 	}
-	json.NewEncoder(w).Encode(group_permission)
+	defer cursor.Close(context.TODO())
+
+	for cursor.Next(context.TODO()) {
+		var group_permisson_list AllGroupPermission
+		var group_permission models.GroupPermissions
+		// var allgrouppermission []interface{}
+		err := cursor.Decode(&group_permission)
+		if err != nil {
+			log.Fatal(err)
+		}
+		group_permisson_list.group = *group_permission.GroupID
+		// allgrouppermission = append(allgrouppermission, *group_permission.PermissonID)
+		group_permisson_list.group_permissions = append(group_permisson_list.group_permissions, group_permisson_list)
+		allGroupsPermission = append(allGroupsPermission, group_permisson_list)
+	}
+	log.Println(allGroupsPermission...)
+	json.NewEncoder(w).Encode(allGroupsPermission)
 }
