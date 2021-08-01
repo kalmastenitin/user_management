@@ -273,6 +273,35 @@
 				"description": "delete group permission one by one"
 			},
 			"response": []
+		},
+		{
+			"name": "create new user",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"fullname\":\"nitin kalmaste\",\r\n    \"username\":\"kalmastenitin\",\r\n    \"password\":\"admin@123\",\r\n    \"email\":\"admin@example.com\",\r\n    \"phone\":\"8458523896\",\r\n    \"group\": \"Superadmin\",\r\n    \"superuser\":true,\r\n    \"is_active\": true\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8001/user/create",
+					"host": [
+						"localhost"
+					],
+					"port": "8001",
+					"path": [
+						"user",
+						"create"
+					]
+				},
+				"description": "create new user method added in system"
+			},
+			"response": []
 		}
 	]
 }

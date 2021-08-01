@@ -24,13 +24,15 @@ func GetUserGroupObject(name string, w http.ResponseWriter) models.Group {
 }
 
 type UserInput struct {
-	Fullname  string `json:"fullname,omitempty" bson:"fullname,omitempty" validate:"required"`
-	Username  string `json:"username,omitempty" bson:"username,omitempty" validate:"required"`
-	Password  string `json:"password,omitempty" bson:"password,omitempty"`
-	Email     string `json:"email,omitempty" bson:"email,omitempty" validate:"required,email"`
-	Phone     string `json:"phone,omitempty" bson:"phone,omitempty" validate:"required"`
-	CreatedBy string `json:"created_by,omitempty" bson:"created_by,omitempty"`
-	Group     string `json:"group,omitempty" bson:"group,omitempty"`
+	Fullname     string `json:"fullname,omitempty" bson:"fullname,omitempty" validate:"required"`
+	Username     string `json:"username,omitempty" bson:"username,omitempty" validate:"required"`
+	Password     string `json:"password,omitempty" bson:"password,omitempty"`
+	Email        string `json:"email,omitempty" bson:"email,omitempty" validate:"required,email"`
+	Phone        string `json:"phone,omitempty" bson:"phone,omitempty" validate:"required"`
+	CreatedBy    string `json:"created_by,omitempty" bson:"created_by,omitempty"`
+	Group        string `json:"group,omitempty" bson:"group,omitempty"`
+	Is_superuser bool   `json:"superuser,omitempty" bson:"superuser,omitempty"`
+	Is_active    bool   `json:"is_active,omitempty" bson:"is_active,omitempty"`
 }
 
 func CreateUser(w http.ResponseWriter, r *http.Request) {
@@ -58,8 +60,8 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		Password:     hash,
 		DateJoined:   time.Now().UTC(),
 		Group:        GetUserGroupObject(user.Group, w).ID,
-		Is_active:    true,
-		Is_superuser: true,
+		Is_active:    user.Is_active,
+		Is_superuser: user.Is_superuser,
 	}
 
 	result, err := models.Usercollection.InsertOne(context.TODO(), newUserObject)
