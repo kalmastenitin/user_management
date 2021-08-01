@@ -33,14 +33,14 @@ func UserCollection(c *mongo.Database) {
 	Usercollection = c.Collection("user")
 }
 
-type Role struct {
-	ID          primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
-	Role        string             `json:"role,omitempty" bson:"role,omitempty"`
-	Permissions []string           `json:"permissions,omitempty" bson:"permissions,omitempty"`
-	CreatedAt   time.Time          `json:"created_at,omitempty" bson:"created_at,omitempty"`
-	CreatedBy   primitive.ObjectID `json:"created_by,omitempty" bson:"created_by,omitempty"`
-	UpdatedAt   time.Time          `json:"updated_at,omitempty" bson:"updated_at,omitempty"`
-}
+// type Role struct {
+// 	ID          primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
+// 	Role        string             `json:"role,omitempty" bson:"role,omitempty"`
+// 	Permissions []string           `json:"permissions,omitempty" bson:"permissions,omitempty"`
+// 	CreatedAt   time.Time          `json:"created_at,omitempty" bson:"created_at,omitempty"`
+// 	CreatedBy   primitive.ObjectID `json:"created_by,omitempty" bson:"created_by,omitempty"`
+// 	UpdatedAt   time.Time          `json:"updated_at,omitempty" bson:"updated_at,omitempty"`
+// }
 
 type Permission struct {
 	ID        primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
@@ -65,8 +65,7 @@ type User struct {
 	ID           primitive.ObjectID `json:"id,omitempty" bson:"_id,omitempty"`
 	Fullname     string             `json:"fullname,omitempty" bson:"fullname,omitempty" validate:"required"`
 	Username     string             `json:"username,omitempty" bson:"username,omitempty" validate:"required"`
-	Password     string             `json:"password,omitempty" bson:"password,omitempty"`
-	Role         primitive.ObjectID `json:"role,omitempty" bson:"role,omitempty" validate:"required"`
+	Password     []byte             `json:"password,omitempty" bson:"password,omitempty"`
 	Email        string             `json:"email,omitempty" bson:"email,omitempty" validate:"required,email"`
 	Phone        string             `json:"phone,omitempty" bson:"phone,omitempty" validate:"required"`
 	CreatedBy    primitive.ObjectID `json:"created_by,omitempty" bson:"created_by,omitempty"`

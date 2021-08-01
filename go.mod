@@ -13,4 +13,5 @@ require (
 	github.com/pilu/fresh v0.0.0-20190826141211-0fa698148017 // indirect
 	github.com/sirupsen/logrus v1.8.1 // indirect
 	go.mongodb.org/mongo-driver v1.7.0
+	golang.org/x/crypto v0.0.0-20210711020723-a769d52b0f97 // indirect
 )
