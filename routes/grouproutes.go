@@ -163,11 +163,6 @@ func AssignPermissionsMany(w http.ResponseWriter, r *http.Request) {
 	helpers.ReturnSuccess("Success", w, http.StatusAccepted)
 }
 
-type AllGroupPermission struct {
-	group             models.Group
-	group_permissions []interface{}
-}
-
 func GetPermission(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 	var allGroupsPermission []interface{}
@@ -181,18 +176,27 @@ func GetPermission(w http.ResponseWriter, r *http.Request) {
 	defer cursor.Close(context.TODO())
 
 	for cursor.Next(context.TODO()) {
-		var group_permisson_list AllGroupPermission
 		var group_permission models.GroupPermissions
-		// var allgrouppermission []interface{}
 		err := cursor.Decode(&group_permission)
 		if err != nil {
 			log.Fatal(err)
 		}
-		group_permisson_list.group = *group_permission.GroupID
-		// allgrouppermission = append(allgrouppermission, *group_permission.PermissonID)
-		group_permisson_list.group_permissions = append(group_permisson_list.group_permissions, group_permisson_list)
-		allGroupsPermission = append(allGroupsPermission, group_permisson_list)
+		allGroupsPermission = append(allGroupsPermission, *group_permission.PermissonID)
+
 	}
-	log.Println(allGroupsPermission...)
+
 	json.NewEncoder(w).Encode(allGroupsPermission)
+}
+
+func DeleteGroupPermission(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	groupname := r.URL.Query().Get("name")
+	codename := r.URL.Query().Get("permission")
+	deleteresult, err := models.Grouppermissioncollection.DeleteOne(context.TODO(), bson.M{"group.name": groupname, "permission.codename": codename})
+	if err != nil {
+		helpers.GetError(err, w, http.StatusNotFound)
+		return
+	}
+	json.NewEncoder(w).Encode(deleteresult)
+
 }
