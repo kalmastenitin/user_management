@@ -1,0 +1,278 @@
+{
+	"info": {
+		"_postman_id": "057a3b0b-3c37-4da6-a2ec-26d4ce77931d",
+		"name": "UserManagement",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "get permission",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8001/permission",
+					"host": [
+						"localhost"
+					],
+					"port": "8001",
+					"path": [
+						"permission"
+					]
+				},
+				"description": "Get List of all Permissions"
+			},
+			"response": []
+		},
+		{
+			"name": "Add New Permission",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"Name\":\"can delete usecase\",\r\n    \"CodeName\": \"can_delete_usecase\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8001/permission",
+					"host": [
+						"localhost"
+					],
+					"port": "8001",
+					"path": [
+						"permission"
+					]
+				},
+				"description": "add new permission to the field"
+			},
+			"response": []
+		},
+		{
+			"name": "delete permission from the system",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:8001/permission?codename=can_delete_usecase",
+					"host": [
+						"localhost"
+					],
+					"port": "8001",
+					"path": [
+						"permission"
+					],
+					"query": [
+						{
+							"key": "codename",
+							"value": "can_delete_usecase"
+						}
+					]
+				},
+				"description": "delete permission that is added in the system"
+			},
+			"response": []
+		},
+		{
+			"name": "get group names",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8001/group",
+					"host": [
+						"localhost"
+					],
+					"port": "8001",
+					"path": [
+						"group"
+					]
+				},
+				"description": "get all group names"
+			},
+			"response": []
+		},
+		{
+			"name": "get group name using query",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8001/group?name=Admin",
+					"host": [
+						"localhost"
+					],
+					"port": "8001",
+					"path": [
+						"group"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "Admin"
+						}
+					]
+				},
+				"description": "get group name using query search"
+			},
+			"response": []
+		},
+		{
+			"name": "create new group in the system",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\":\"Operators\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8001/group",
+					"host": [
+						"localhost"
+					],
+					"port": "8001",
+					"path": [
+						"group"
+					]
+				},
+				"description": "create new user group in the system"
+			},
+			"response": []
+		},
+		{
+			"name": "delete usergroup from the system",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:8001/group?name=Operators",
+					"host": [
+						"localhost"
+					],
+					"port": "8001",
+					"path": [
+						"group"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "Operators"
+						}
+					]
+				},
+				"description": "delete user group from the system"
+			},
+			"response": []
+		},
+		{
+			"name": "assign list of permissions to the user group at once",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "codename",
+						"value": "add_permission",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"GroupID\": \"Superadmin\",\r\n    \"PermissionID\": [\r\n        \"edit_permission\",\r\n        \"view_permission\",\r\n        \"delete_user\",\r\n        \"edit_user\",\r\n        \"add_user\",\r\n        \"edit_camera\",\r\n        \"delete_camera\",\r\n        \"view_camera\",\r\n        \"view_permission\",\r\n        \"view_user\",\r\n        \"add_camera\",\r\n        \"add_models\"\r\n    ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8001/assignpermissionmany",
+					"host": [
+						"localhost"
+					],
+					"port": "8001",
+					"path": [
+						"assignpermissionmany"
+					],
+					"query": [
+						{
+							"key": "codename",
+							"value": "add_camera",
+							"disabled": true
+						},
+						{
+							"key": "name",
+							"value": "Admin",
+							"disabled": true
+						}
+					]
+				},
+				"description": "assing list of permission to user group using list of many permission"
+			},
+			"response": []
+		},
+		{
+			"name": "get permission list for group",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8001/getpermission?name=Superadmin",
+					"host": [
+						"localhost"
+					],
+					"port": "8001",
+					"path": [
+						"getpermission"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "Superadmin"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete group permission",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:8001/removegrouppermission?name=Superadmin&permission=add_models",
+					"host": [
+						"localhost"
+					],
+					"port": "8001",
+					"path": [
+						"removegrouppermission"
+					],
+					"query": [
+						{
+							"key": "name",
+							"value": "Superadmin"
+						},
+						{
+							"key": "permission",
+							"value": "add_models"
+						}
+					]
+				},
+				"description": "delete group permission one by one"
+			},
+			"response": []
+		}
+	]
+}
