@@ -24,7 +24,7 @@ func Connect() {
 	if err != nil {
 		log.Fatal("cannot connect to database", err)
 	} else {
-		log.Println("database connected!")
+		log.Fatal("connected to database!")
 	}
 
 	db := client.Database("usergo")

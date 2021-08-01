@@ -13,6 +13,7 @@ import (
 func main() {
 	config.Connect()
 	r := mux.NewRouter()
+
 	routes.Validate = validator.New()
 
 	r.HandleFunc("/permission", routes.GetAllPermissions).Methods("GET")

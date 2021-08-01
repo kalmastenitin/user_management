@@ -10,7 +10,6 @@ import (
 	"github.com/kalmastenitin/user_management/helpers"
 	"github.com/kalmastenitin/user_management/models"
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func GetAllGroups(w http.ResponseWriter, r *http.Request) {
@@ -187,7 +186,7 @@ func AssignPermissionsMany(w http.ResponseWriter, r *http.Request) {
 	}
 	log.Println(permissionObjects...)
 	if len(permissionObjects) != 0 {
-		result, err := models.Grouppermissioncollection.InsertMany(context.TODO(), permissionObjects, options.InsertMany().SetOrdered(true))
+		result, err := models.Grouppermissioncollection.InsertMany(context.TODO(), permissionObjects)
 		if err != nil {
 			helpers.GetError(err, w, http.StatusInternalServerError)
 			return
