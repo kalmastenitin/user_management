@@ -70,7 +70,7 @@ type User struct {
 	Phone        string             `json:"phone,omitempty" bson:"phone,omitempty" validate:"required"`
 	CreatedBy    primitive.ObjectID `json:"created_by,omitempty" bson:"created_by,omitempty"`
 	Group        primitive.ObjectID `json:"group,omitempty" bson:"group,omitempty"`
-	Is_active    bool               `json:"is_active,omitempty" bson:"is_active,omitempty" validate:"required"`
+	Is_active    bool               `json:"is_active" bson:"is_active" validate:"required"`
 	DateJoined   time.Time          `json:"date_joined,omitempty" bson:"date_joined,omitempty"`
-	Is_superuser bool               `json:"is_superuser,omitempty" bson:"is_superuser,omitempty"`
+	Is_superuser bool               `json:"is_superuser" bson:"is_superuser"`
 }
