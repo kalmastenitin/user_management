@@ -27,6 +27,9 @@ func main() {
 	r.HandleFunc("/removegrouppermission", routes.DeleteGroupPermission).Methods("DELETE")
 
 	r.HandleFunc("/user/create", routes.CreateUser).Methods("POST")
+	r.HandleFunc("/user/update", routes.UpdateUser).Methods("PUT")
+	r.HandleFunc("/user", routes.GetUser).Methods("GET")
+	r.HandleFunc("/user", routes.DeleteUser).Methods("DELETE")
 
 	log.Fatal(http.ListenAndServe(":8001", r))
 }

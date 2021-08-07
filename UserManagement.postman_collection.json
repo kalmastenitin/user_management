@@ -281,7 +281,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"fullname\":\"nitin kalmaste\",\r\n    \"username\":\"kalmastenitin\",\r\n    \"password\":\"admin@123\",\r\n    \"email\":\"admin@example.com\",\r\n    \"phone\":\"8458523896\",\r\n    \"group\": \"Superadmin\",\r\n    \"superuser\":true,\r\n    \"is_active\": true\r\n}",
+					"raw": "{\r\n    \"fullname\":\"nitin kalmaste\",\r\n    \"username\":\"kalmasteuday\",\r\n    \"password\":\"admin@123\",\r\n    \"email\":\"kalmasteuday@example.com\",\r\n    \"phone\":\"8458523896\",\r\n    \"group\": \"Admin\",\r\n    \"superuser\":false,\r\n    \"is_active\": true\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -300,6 +300,86 @@
 					]
 				},
 				"description": "create new user method added in system"
+			},
+			"response": []
+		},
+		{
+			"name": "Get User Info",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:8001/user",
+					"host": [
+						"localhost"
+					],
+					"port": "8001",
+					"path": [
+						"user"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "kalmastenitin",
+							"disabled": true
+						}
+					]
+				},
+				"description": "Get user details using query or get all users by serarching without query"
+			},
+			"response": []
+		},
+		{
+			"name": "update user data using PUT method",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "    {\r\n        \"fullname\": \"nitin c. kalmaste\",\r\n        \"username\": \"kalmastenitin\",\r\n        \"email\": \"admin@example.com\",\r\n        \"phone\": \"8149186047\",\r\n        \"group\": \"Superadmin\",\r\n        \"is_superuser\": true,\r\n        \"is_active\": true\r\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:8001/user/update",
+					"host": [
+						"localhost"
+					],
+					"port": "8001",
+					"path": [
+						"user",
+						"update"
+					]
+				},
+				"description": "Here all data acquired using get method need to be sent for patch request"
+			},
+			"response": []
+		},
+		{
+			"name": "delete user info from database",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "localhost:8001/user?username=kalmasteuday",
+					"host": [
+						"localhost"
+					],
+					"port": "8001",
+					"path": [
+						"user"
+					],
+					"query": [
+						{
+							"key": "username",
+							"value": "kalmasteuday"
+						}
+					]
+				},
+				"description": "delete user information from the system"
 			},
 			"response": []
 		}

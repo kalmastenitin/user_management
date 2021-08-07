@@ -90,8 +90,8 @@ type UserOutPut struct {
 	Phone        string `json:"phone,omitempty" bson:"phone,omitempty" validate:"required"`
 	CreatedBy    string `json:"created_by,omitempty" bson:"created_by,omitempty"`
 	Group        string `json:"group,omitempty" bson:"group,omitempty"`
-	Is_superuser bool   `json:"is_superuser,omitempty" bson:"is_superuser,omitempty"`
-	Is_active    bool   `json:"is_active,omitempty" bson:"is_active,omitempty"`
+	Is_superuser bool   `json:"is_superuser" bson:"is_superuser,omitempty"`
+	Is_active    bool   `json:"is_active" bson:"is_active,omitempty"`
 }
 
 func GetUser(w http.ResponseWriter, r *http.Request) {
@@ -154,5 +154,63 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 		users = append(users, newUserObject)
 	}
 	json.NewEncoder(w).Encode(users)
+
+}
+
+func UpdateUser(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	var user UserInput
+	var userObject models.User
+
+	_ = json.NewDecoder(r.Body).Decode(&user)
+
+	err := models.Usercollection.FindOne(context.TODO(), bson.M{"username": user.Username}).Decode(&userObject)
+
+	if err != nil {
+		helpers.GetErrorCustom("User Not Exist", w, http.StatusNotFound)
+		return
+	}
+
+	newUserObject := models.User{
+		Fullname:     user.Fullname,
+		Username:     user.Username,
+		Email:        user.Email,
+		Phone:        user.Phone,
+		DateJoined:   time.Now().UTC(),
+		Is_active:    user.Is_active,
+		Is_superuser: user.Is_superuser,
+	}
+
+	if user.Password != "" {
+		hash, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+		if err != nil {
+			log.Fatal(err)
+		}
+		newUserObject.Password = hash
+	}
+	if user.Group != "" {
+		newUserObject.Group = GetUserGroupObject(user.Group, w).ID
+	}
+	log.Println(newUserObject)
+	result := models.Usercollection.FindOneAndUpdate(context.TODO(), bson.M{"username": userObject.Username}, bson.M{"$set": newUserObject})
+
+	json.NewEncoder(w).Encode(result)
+}
+
+func DeleteUser(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	username := r.URL.Query().Get("username")
+
+	if username == "" {
+		helpers.GetErrorCustom("Provide Username", w, http.StatusBadRequest)
+		return
+	}
+	deleteresult, err := models.Usercollection.DeleteOne(context.TODO(), bson.M{"username": username})
+	if err != nil {
+		helpers.GetError(err, w, http.StatusNotFound)
+		return
+	}
+	json.NewEncoder(w).Encode(deleteresult)
 
 }
